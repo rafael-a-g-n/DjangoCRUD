@@ -1,3 +1,5 @@
+"""Django management script."""
+
 import os
 import sys
 

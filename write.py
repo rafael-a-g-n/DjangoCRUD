@@ -1,19 +1,23 @@
+"""Script to write data to the database (create instructors, learners, courses)."""
+# pylint: disable=wrong-import-position
+# flake8: noqa: E402
+
 # Django specific settings
 import os
+from datetime import date
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 # Ensure settings are read
 from django.core.wsgi import get_wsgi_application
 
-application = get_wsgi_application()
+get_wsgi_application()
 
-from datetime import date
-
-from crud.models import *
+from crud.models import Course, Enrollment, Instructor, Learner, Lesson, User
 
 
 # Your code starts from here:
 def write_instructors():
+    """Create and save instructor records to the database."""
     # Add instructors
     # Create a user
     user_john = User(first_name="John", last_name="Doe", dob=date(1962, 7, 16))
@@ -52,6 +56,7 @@ def write_instructors():
 
 
 def write_courses():
+    """Create and save course records to the database."""
     # Add Courses
     course_cloud_app = Course(
         name="Cloud Application Development with Database",
@@ -69,6 +74,7 @@ def write_courses():
 
 
 def write_lessons():
+    """Create and save lesson records to the database."""
     # Add lessons
     lession1 = Lesson(title="Lesson 1", content="Object-relational mapping project")
     lession1.save()
@@ -78,6 +84,7 @@ def write_lessons():
 
 
 def write_learners():
+    """Create and save learner records to the database."""
     # Add learners
     learner_james = Learner(
         first_name="James",
@@ -118,13 +125,14 @@ def write_learners():
 
 
 def clean_data():
+    """Delete all data to start from fresh."""
     # Delete all data to start from fresh
-    Enrollment.objects.all().delete()
-    User.objects.all().delete()
-    Learner.objects.all().delete()
-    Instructor.objects.all().delete()
-    Course.objects.all().delete()
-    Lesson.objects.all().delete()
+    Enrollment.objects.all().delete()  # pylint: disable=no-member
+    User.objects.all().delete()  # pylint: disable=no-member
+    Learner.objects.all().delete()  # pylint: disable=no-member
+    Instructor.objects.all().delete()  # pylint: disable=no-member
+    Course.objects.all().delete()  # pylint: disable=no-member
+    Lesson.objects.all().delete()  # pylint: disable=no-member
     print("All data deleted... ")
 
 
