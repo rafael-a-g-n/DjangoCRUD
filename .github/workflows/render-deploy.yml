@@ -1,4 +1,6 @@
+
 name: Deploy to Render
+
 
 on:
   push:
@@ -9,15 +11,35 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+          - name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
 
+          - name: Create GitHub Deployment
+            id: create_deployment
+            uses: actions/create-deployment@v1
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              environment: production
+              transient_environment: false
+              auto_inactive: true
 
+          - name: Trigger Render Deploy Hook
+            run: |
+              curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
 
-      - name: Trigger Render Deploy Hook
-        run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          - name: Update GitHub Deployment Status
+            uses: actions/deployment-status@v1
+            with:
+              token: ${{ secrets.GITHUB_TOKEN }}
+              environment: production
+              state: success
+              deployment_id: ${{ steps.create_deployment.outputs.deployment_id }}
