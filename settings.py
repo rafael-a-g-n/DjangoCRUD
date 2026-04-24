@@ -1,4 +1,6 @@
 
+
+DEBUG = True
 """Django settings for the CRUD application."""
 
 import os

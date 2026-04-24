@@ -1,17 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import Course, Instructor
+from .forms import InstructorForm
 from django import forms
 
 # Form for Course
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'description']
-
-# Form for Instructor
-class InstructorForm(forms.ModelForm):
-    class Meta:
-        model = Instructor
         fields = ['name', 'description']
 
 # List all courses
