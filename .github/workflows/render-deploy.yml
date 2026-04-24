@@ -20,9 +20,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+
       - name: Create GitHub Deployment
-        id: create_deployment
-        uses: actions/create-deployment@v1
+        id: deployment
+        uses: peter-evans/create-or-update-deployment@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: production
@@ -34,9 +35,9 @@ jobs:
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
 
       - name: Update GitHub Deployment Status
-        uses: actions/deployment-status@v1
+        uses: peter-evans/create-or-update-deployment-status@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: production
           state: success
-          deployment_id: ${{ steps.create_deployment.outputs.deployment_id }}
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
