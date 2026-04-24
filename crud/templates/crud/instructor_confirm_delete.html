@@ -1,0 +1,10 @@
+{% extends 'crud/base.html' %}
+{% block content %}
+<h2>Delete Instructor</h2>
+<p>Are you sure you want to delete instructor <strong>{{ instructor.first_name|escape }} {{ instructor.last_name|escape }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'crud:instructor_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
