@@ -1,12 +1,14 @@
-
 name: Deploy to Render
-
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
 
 jobs:
   deploy:
@@ -20,24 +22,64 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-
       - name: Create GitHub Deployment
         id: deployment
-        uses: peter-evans/create-or-update-deployment@v3
+        uses: chrnorm/deployment-action@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: production
-          transient_environment: false
-          auto_inactive: true
 
-      - name: Trigger Render Deploy Hook
+      - name: Trigger and Wait for Render Deployment
+        id: render_deploy
+        env:
+          API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          echo "Triggering deploy hook..."
+          curl -s -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          
+          echo "Waiting 15 seconds for Render to register the new deploy..."
+          sleep 15
+          
+          STATUS="created"
+          MAX_RETRIES=40 # Maximum wait time of 10 minutes (40 loops * 15 seconds)
+          RETRY_COUNT=0
+          
+          # Loop while the status is 'created' or any kind of 'in_progress'
+          while [[ ("$STATUS" == "created" || "$STATUS" == *"in_progress"*) && $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+            echo "Polling Render API for deployment status... (Attempt $((RETRY_COUNT + 1)))"
+            
+            # Fetch the most recent deploy for this service
+            RESPONSE=$(curl -s -X GET "https://api.render.com/v1/services/$SERVICE_ID/deploys?limit=1" \
+              -H "Authorization: Bearer $API_KEY" \
+              -H "Accept: application/json")
+              
+            # Use jq to extract just the status string
+            STATUS=$(echo "$RESPONSE" | jq -r '.[0].deploy.status')
+            echo "Current Render Status: $STATUS"
+            
+            if [[ "$STATUS" == "created" || "$STATUS" == *"in_progress"* ]]; then
+              sleep 15
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+            fi
+          done
+
+          # Check final outcome
+          if [[ "$STATUS" == "live" ]]; then
+            echo "Deploy successful!"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "Deploy failed, timed out, or was canceled."
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit 1 # Forces this GitHub Action step to fail
+          fi
 
       - name: Update GitHub Deployment Status
-        uses: peter-evans/create-or-update-deployment-status@v4
+        uses: chrnorm/deployment-status@v2
+        if: always() 
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           environment: production
-          state: success
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          # Dynamically grab the success/failure state from the previous step
+          state: ${{ steps.render_deploy.outputs.status || 'failure' }}
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
