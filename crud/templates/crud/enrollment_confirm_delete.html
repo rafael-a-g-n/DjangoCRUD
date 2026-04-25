@@ -8,8 +8,8 @@
     <p>Are you sure you want to delete the enrollment of <strong>{{ enrollment.learner.first_name }} {{ enrollment.learner.last_name }}</strong> in <strong>{{ enrollment.course.name }}</strong>?</p>
     <form method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Yes, Delete</button>
-      <a href="{% url 'crud:course_detail' enrollment.course.id %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-sm btn-danger">Yes, Delete</button>
+      <a href="{% url 'crud:course_detail' enrollment.course.id %}" class="btn btn-sm btn-secondary">Cancel</a>
     </form>
   </div>
 </div>

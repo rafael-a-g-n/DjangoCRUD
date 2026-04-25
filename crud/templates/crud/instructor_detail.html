@@ -21,9 +21,9 @@
         <li class="list-group-item text-muted">No courses assigned.</li>
       {% endfor %}
     </ul>
-    <a href="{% url 'crud:instructor_update' instructor.id %}" class="btn btn-outline-primary">Edit</a>
-    <a href="{% url 'crud:instructor_delete' instructor.id %}" class="btn btn-outline-danger">Delete</a>
-    <a href="{% url 'crud:instructor_list' %}" class="btn btn-secondary">Back to List</a>
+    <a href="{% url 'crud:instructor_update' instructor.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+    <a href="{% url 'crud:instructor_delete' instructor.id %}" class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+    <a href="{% url 'crud:instructor_list' %}" class="btn btn-sm btn-secondary ms-1">Back to List</a>
   </div>
 </div>
 {% endblock %}

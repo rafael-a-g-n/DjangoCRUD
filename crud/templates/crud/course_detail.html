@@ -35,7 +35,10 @@
       <tbody>
         {% for enrollment in course.enrollment_set.all %}
         <tr>
-          <td><a href="{% url 'crud:learner_update' enrollment.learner.id %}" class="text-decoration-none">{{ enrollment.learner.first_name|escape }} {{ enrollment.learner.last_name|escape }}</a></td>
+          <td>{{ enrollment.learner.first_name|escape }} {{ enrollment.learner.last_name|escape }}</td>
+          <td>
+            <a href="{% url 'crud:learner_detail' enrollment.learner.id %}" class="btn btn-sm btn-outline-secondary">Detail</a>
+          </td>
           <td>{{ enrollment.get_mode_display|default:"-"|escape }}</td>
           <td>{{ enrollment.get_status_display|default:"-"|escape }}</td>
           <td>{{ enrollment.get_grade_display|default:"-"|escape }}</td>
