@@ -123,6 +123,14 @@ def learner_delete(request, pk):
         return redirect('crud:learner_list')
     return render(request, 'crud/learner_confirm_delete.html', {'learner': learner})
 
+
+# Learner detail view
+def learner_detail(request, pk):
+    learner = get_object_or_404(Learner, pk=pk)
+    # Get courses the learner is enrolled in
+    enrolled_courses = Course.objects.filter(enrollment__learner=learner).distinct()
+    return render(request, 'crud/learner_detail.html', {'learner': learner, 'enrolled_courses': enrolled_courses})
+
 # Course detail view
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)

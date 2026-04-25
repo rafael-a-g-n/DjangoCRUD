@@ -15,7 +15,7 @@
     <tbody>
         {% for learner in learners %}
         <tr>
-            <td>{{ learner.first_name|escape }}</td>
+            <td><a href="{% url 'crud:learner_detail' learner.id %}">{{ learner.first_name|escape }}</a></td>
             <td>{{ learner.last_name|escape }}</td>
             <td>{{ learner.email|escape }}</td>
             <td>{{ learner.get_occupation_display|default:"-"|escape }}</td>

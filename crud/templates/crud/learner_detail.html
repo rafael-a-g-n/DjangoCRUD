@@ -1,0 +1,45 @@
+{% extends 'crud/base.html' %}
+{% block content %}
+<h2>Learner Details</h2>
+<div class="card mb-3">
+  <div class="card-body">
+    <h4 class="card-title">{{ learner.first_name|escape }} {{ learner.last_name|escape }}</h4>
+    <p class="card-text"><strong>Email:</strong> {{ learner.email|escape }}</p>
+    <p class="card-text"><strong>Occupation:</strong> {{ learner.get_occupation_display|default:"-"|escape }}</p>
+    {% if learner.social_link %}
+      <p class="card-text"><strong>Social Link:</strong> <a href="{{ learner.social_link|escape }}" target="_blank" rel="noopener noreferrer">Profile</a></p>
+    {% endif %}
+  </div>
+</div>
+
+<h3>Enrolled Courses</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Course Name</th>
+      <th>Description</th>
+      <th>Instructors</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in enrolled_courses %}
+    <tr>
+      <td>{{ course.name|escape }}</td>
+      <td>{{ course.description|default:"-"|escape }}</td>
+      <td>
+        {% for instructor in course.instructors.all %}
+          <a href="{% url 'crud:instructor_detail' instructor.id %}">{{ instructor.first_name|escape }} {{ instructor.last_name|escape }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}-{% endfor %}
+      </td>
+      <td>
+        <a href="{% url 'crud:course_detail' course.id %}">View</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Not enrolled in any courses.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'crud:learner_list' %}" class="btn btn-secondary">Back to Learners</a>
+{% endblock %}
