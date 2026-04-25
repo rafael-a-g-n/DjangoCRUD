@@ -13,31 +13,43 @@
 </div>
 
 <h3>Enrolled Courses</h3>
-<table class="table table-striped">
+<table class="table table-bordered table-striped mb-3">
   <thead>
     <tr>
-      <th>Course Name</th>
-      <th>Description</th>
+      <th>Course</th>
+      <th>Mode</th>
+      <th>Status</th>
+      <th>Grade</th>
+      <th>Progress</th>
+      <th>Certificate</th>
+      <th>Last Accessed</th>
+      <th>Feedback</th>
       <th>Instructors</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    {% for course in enrolled_courses %}
+    {% for enrollment in learner.enrollment_set.all %}
     <tr>
-      <td>{{ course.name|escape }}</td>
-      <td>{{ course.description|default:"-"|escape }}</td>
+      <td><a href="{% url 'crud:course_detail' enrollment.course.id %}">{{ enrollment.course.name|escape }}</a></td>
+      <td>{{ enrollment.get_mode_display|default:"-"|escape }}</td>
+      <td>{{ enrollment.get_status_display|default:"-"|escape }}</td>
+      <td>{{ enrollment.get_grade_display|default:"-"|escape }}</td>
+      <td>{{ enrollment.progress|default:"-" }}%</td>
+      <td>{% if enrollment.certificate_issued %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+      <td>{{ enrollment.last_accessed|date:"Y-m-d H:i"|default:"-" }}</td>
+      <td>{{ enrollment.feedback|default:"-"|linebreaksbr|escape }}</td>
       <td>
-        {% for instructor in course.instructors.all %}
+        {% for instructor in enrollment.course.instructors.all %}
           <a href="{% url 'crud:instructor_detail' instructor.id %}">{{ instructor.first_name|escape }} {{ instructor.last_name|escape }}</a>{% if not forloop.last %}, {% endif %}
         {% empty %}-{% endfor %}
       </td>
       <td>
-        <a href="{% url 'crud:course_detail' course.id %}">View</a>
+        <a href="{% url 'crud:enrollment_update' enrollment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
       </td>
     </tr>
     {% empty %}
-    <tr><td colspan="4">Not enrolled in any courses.</td></tr>
+    <tr><td colspan="10">Not enrolled in any courses.</td></tr>
     {% endfor %}
   </tbody>
 </table>
