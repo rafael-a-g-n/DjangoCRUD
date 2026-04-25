@@ -88,6 +88,8 @@ def instructor_detail(request, pk):
     return render(request, 'crud/instructor_detail.html', {'instructor': instructor})
 
 # List all learners
+
+# Create a new enrollment (assign learner to course)
 def learner_list(request):
     learners = Learner.objects.all()
     return render(request, 'crud/learner_list.html', {'learners': learners})
@@ -100,6 +102,7 @@ def learner_create(request):
             form.save()
             return redirect('crud:learner_list')
     else:
+# Edit an existing enrollment
         form = LearnerForm()
     return render(request, 'crud/learner_form.html', {'form': form})
 
