@@ -1,3 +1,23 @@
+from .models import Instructor, Learner, Enrollment, Course
+
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = [
+            'learner', 'course', 'date_enrolled', 'mode', 'grade', 'status',
+            'progress', 'last_accessed', 'certificate_issued', 'feedback'
+        ]
+        widgets = {
+            'date_enrolled': forms.DateInput(attrs={'type': 'date'}),
+            'last_accessed': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'feedback': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def clean_progress(self):
+        progress = self.cleaned_data.get('progress')
+        if progress is not None and (progress < 0 or progress > 100):
+            raise forms.ValidationError('Progress must be between 0 and 100.')
+        return progress
 from django import forms
 from .models import Instructor, Learner
 
