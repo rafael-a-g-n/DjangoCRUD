@@ -39,4 +39,9 @@ urlpatterns = [
         views.enrollment_update,
         name='enrollment_update',
     ),
+    path(
+        'enrollments/<int:pk>/delete/',
+        views.enrollment_delete,
+        name='enrollment_delete',
+    ),
 ]

@@ -103,9 +103,12 @@ class Course(models.Model):
 
 
 # Enrollment model as a lookup table with additional enrollment info
+
 class Enrollment(models.Model):
-    """Represents the enrollment of a learner in a course with additional
-    information."""
+    """Represents the enrollment of a learner in a course with additional information."""
+
+    class Meta:
+        unique_together = ('learner', 'course')
 
     AUDIT = "audit"
     HONOR = "honor"

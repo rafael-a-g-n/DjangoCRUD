@@ -45,6 +45,10 @@
           <td>{{ enrollment.feedback|default:"-"|linebreaksbr|escape }}</td>
           <td>
             <a href="{% url 'crud:enrollment_update' enrollment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form action="{% url 'crud:enrollment_delete' enrollment.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this enrollment?');">Delete</button>
+            </form>
           </td>
         </tr>
         {% empty %}
@@ -52,10 +56,12 @@
         {% endfor %}
       </tbody>
     </table>
-    <a href="{% url 'crud:enrollment_create' course.id %}" class="btn btn-success mb-3">Add Enrollment</a>
-    <a href="{% url 'crud:course_update' course.id %}" class="btn btn-outline-primary">Edit</a>
-    <a href="{% url 'crud:course_delete' course.id %}" class="btn btn-outline-danger">Delete</a>
-    <a href="{% url 'crud:course_list' %}" class="btn btn-secondary">Back to List</a>
+    <div class="d-flex gap-2 mb-3">
+      <a href="{% url 'crud:enrollment_create' course.id %}" class="btn btn-sm btn-outline-success">Add Enrollment</a>
+      <a href="{% url 'crud:course_update' course.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+      <a href="{% url 'crud:course_delete' course.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      <a href="{% url 'crud:course_list' %}" class="btn btn-sm btn-secondary">Back to List</a>
+    </div>
   </div>
 </div>
 {% endblock %}

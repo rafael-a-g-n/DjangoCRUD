@@ -1,3 +1,16 @@
+# Delete an enrollment
+from crud.models import Enrollment
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+def enrollment_delete(request, pk):
+    """Delete an enrollment and redirect to the course detail page."""
+    enrollment = get_object_or_404(Enrollment, pk=pk)
+    course_id = enrollment.course.id
+    if request.method == 'POST':
+        enrollment.delete()
+        return redirect('crud:course_detail', pk=course_id)
+    return render(request, 'crud/enrollment_confirm_delete.html', {'enrollment': enrollment})
 # Enrollment update view
 def enrollment_update(request, pk):
     """Update an existing enrollment."""
@@ -10,7 +23,8 @@ def enrollment_update(request, pk):
             return redirect('crud:course_detail', pk=enrollment.course.pk)
     else:
         form = EnrollmentForm(instance=enrollment)
-    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': enrollment.course})
+    cancel_url = reverse('crud:course_detail', kwargs={'pk': enrollment.course.pk})
+    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': enrollment.course, 'cancel_url': cancel_url})
 """Views for CRUD app models."""
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -30,7 +44,8 @@ def enrollment_create(request, course_id):
             return redirect('crud:course_detail', pk=course_id)
     else:
         form = EnrollmentForm(initial={'course': course})
-    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': course})
+    cancel_url = reverse('crud:course_detail', kwargs={'pk': course_id})
+    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': course, 'cancel_url': cancel_url})
 
 
 
