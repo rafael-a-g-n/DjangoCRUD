@@ -2,7 +2,33 @@
 """Forms for CRUD app models."""
 
 from django import forms
-from crud.models import Instructor, Learner, Enrollment
+from crud.models import Instructor, Learner, Enrollment, Course
+
+# Form for Course with instructors field
+class CourseForm(forms.ModelForm):
+    """Form for Course model, including instructors assignment."""
+    instructors = forms.ModelMultipleChoiceField(
+        queryset=Instructor.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        required=False,
+        help_text="Hold Ctrl (Cmd on Mac) to select multiple instructors."
+    )
+
+    class Meta:
+        model = Course
+        fields = ['name', 'description', 'instructors']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['instructors'].initial = self.instance.instructors.all()
+
+    def save(self, commit=True):
+        course = super().save(commit=False)
+        if commit:
+            course.save()
+            self.save_m2m()
+        return course
 
 
 class EnrollmentForm(forms.ModelForm):

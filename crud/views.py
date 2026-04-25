@@ -16,7 +16,7 @@ def enrollment_update(request, pk):
 from django.shortcuts import render, get_object_or_404, redirect
 from django import forms
 from crud.models import Course, Instructor, Learner
-from crud.forms import InstructorForm, LearnerForm, EnrollmentForm
+from crud.forms import InstructorForm, LearnerForm, EnrollmentForm, CourseForm
 # Enrollment create view
 def enrollment_create(request, course_id):
     """Create a new enrollment for a learner in a course."""
@@ -33,11 +33,6 @@ def enrollment_create(request, course_id):
     return render(request, 'crud/enrollment_form.html', {'form': form, 'course': course})
 
 
-class CourseForm(forms.ModelForm):
-    """Form for Course model."""
-    class Meta:
-        model = Course
-        fields = ['name', 'description']
 
 
 def course_list(request):
@@ -52,7 +47,7 @@ def course_create(request):
         form = CourseForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('course_list')
+            return redirect('crud:course_list')
     else:
         form = CourseForm()
     return render(request, 'crud/course_form.html', {'form': form})
@@ -65,7 +60,7 @@ def course_update(request, pk):
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
             form.save()
-            return redirect('course_list')
+            return redirect('crud:course_list')
     else:
         form = CourseForm(instance=course)
     return render(request, 'crud/course_form.html', {'form': form})
