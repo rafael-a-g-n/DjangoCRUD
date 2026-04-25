@@ -14,7 +14,9 @@
     <h6>Courses Taught:</h6>
     <ul class="list-group mb-3">
       {% for course in instructor.course_set.all %}
-        <li class="list-group-item">{{ course.name|escape }}</li>
+        <li class="list-group-item">
+          <a href="{% url 'crud:course_detail' course.id %}" class="text-decoration-none">{{ course.name|escape }}</a>
+        </li>
       {% empty %}
         <li class="list-group-item text-muted">No courses assigned.</li>
       {% endfor %}
