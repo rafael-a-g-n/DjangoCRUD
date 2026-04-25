@@ -1,3 +1,16 @@
+# Enrollment update view
+def enrollment_update(request, pk):
+    """Update an existing enrollment."""
+    from crud.models import Enrollment
+    enrollment = get_object_or_404(Enrollment, pk=pk)
+    if request.method == 'POST':
+        form = EnrollmentForm(request.POST, instance=enrollment)
+        if form.is_valid():
+            form.save()
+            return redirect('course_detail', pk=enrollment.course.pk)
+    else:
+        form = EnrollmentForm(instance=enrollment)
+    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': enrollment.course})
 """Views for CRUD app models."""
 
 from django.shortcuts import render, get_object_or_404, redirect
