@@ -82,6 +82,11 @@ def instructor_delete(request, pk):
         return redirect('crud:instructor_list')
     return render(request, 'crud/instructor_confirm_delete.html', {'instructor': instructor})
 
+# Instructor detail view
+def instructor_detail(request, pk):
+    instructor = get_object_or_404(Instructor, pk=pk)
+    return render(request, 'crud/instructor_detail.html', {'instructor': instructor})
+
 # List all learners
 def learner_list(request):
     learners = Learner.objects.all()
