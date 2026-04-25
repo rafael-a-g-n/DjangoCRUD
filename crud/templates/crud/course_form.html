@@ -14,6 +14,6 @@
         {{ form.description|add_class:'form-control' }}
     </div>
     <button type="submit" class="btn btn-success">Save</button>
-    <a href="{% url 'course_list' %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'crud:course_list' %}" class="btn btn-secondary">Cancel</a>
 </form>
 {% endblock %}
