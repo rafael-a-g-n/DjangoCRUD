@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Course, Instructor
-from .forms import InstructorForm
+from .models import Course, Instructor, Learner
+from .forms import InstructorForm, LearnerForm
 from django import forms
 
 # Form for Course
@@ -81,3 +81,39 @@ def instructor_delete(request, pk):
         instructor.delete()
         return redirect('crud:instructor_list')
     return render(request, 'crud/instructor_confirm_delete.html', {'instructor': instructor})
+
+# List all learners
+def learner_list(request):
+    learners = Learner.objects.all()
+    return render(request, 'crud/learner_list.html', {'learners': learners})
+
+# Create a new learner
+def learner_create(request):
+    if request.method == 'POST':
+        form = LearnerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crud:learner_list')
+    else:
+        form = LearnerForm()
+    return render(request, 'crud/learner_form.html', {'form': form})
+
+# Update an existing learner
+def learner_update(request, pk):
+    learner = get_object_or_404(Learner, pk=pk)
+    if request.method == 'POST':
+        form = LearnerForm(request.POST, instance=learner)
+        if form.is_valid():
+            form.save()
+            return redirect('crud:learner_list')
+    else:
+        form = LearnerForm(instance=learner)
+    return render(request, 'crud/learner_form.html', {'form': form})
+
+# Delete a learner
+def learner_delete(request, pk):
+    learner = get_object_or_404(Learner, pk=pk)
+    if request.method == 'POST':
+        learner.delete()
+        return redirect('crud:learner_list')
+    return render(request, 'crud/learner_confirm_delete.html', {'learner': learner})
