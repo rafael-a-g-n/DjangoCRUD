@@ -122,3 +122,8 @@ def learner_delete(request, pk):
         learner.delete()
         return redirect('crud:learner_list')
     return render(request, 'crud/learner_confirm_delete.html', {'learner': learner})
+
+# Course detail view
+def course_detail(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    return render(request, 'crud/course_detail.html', {'course': course})

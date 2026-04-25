@@ -1,0 +1,35 @@
+{% extends 'crud/base.html' %}
+{% block content %}
+<div class="card">
+  <div class="card-header bg-success text-white">
+    <h3 class="mb-0">Course Detail</h3>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ course.name|escape }}</h5>
+    <p class="card-text mb-1"><strong>Description:</strong> {{ course.description|default:"-"|escape }}</p>
+    <h6>Instructors:</h6>
+    <ul class="list-group mb-3">
+      {% for instructor in course.instructors.all %}
+        <li class="list-group-item">
+          <a href="{% url 'crud:instructor_detail' instructor.id %}" class="text-decoration-none">{{ instructor.first_name|escape }} {{ instructor.last_name|escape }}</a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No instructors assigned.</li>
+      {% endfor %}
+    </ul>
+    <h6>Learners Enrolled:</h6>
+    <ul class="list-group mb-3">
+      {% for learner in course.learners.all %}
+        <li class="list-group-item">
+          <a href="{% url 'crud:learner_update' learner.id %}" class="text-decoration-none">{{ learner.first_name|escape }} {{ learner.last_name|escape }}</a>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No learners enrolled.</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'crud:course_update' course.id %}" class="btn btn-outline-primary">Edit</a>
+    <a href="{% url 'crud:course_delete' course.id %}" class="btn btn-outline-danger">Delete</a>
+    <a href="{% url 'crud:course_list' %}" class="btn btn-secondary">Back to List</a>
+  </div>
+</div>
+{% endblock %}
