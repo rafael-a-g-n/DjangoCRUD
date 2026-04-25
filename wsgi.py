@@ -1,4 +1,3 @@
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 """WSGI config for DjangoCRUD project."""
 
 import os
