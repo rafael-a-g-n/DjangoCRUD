@@ -1,3 +1,4 @@
+
 """Django models for the CRUD application."""
 
 from django.db import models
@@ -15,8 +16,8 @@ class User(models.Model):
     location = models.CharField(null=True, max_length=100, default="Unknown")
     dob = models.DateField(null=True)
 
-    # Create a toString method for object string representation
     def __str__(self):
+        """Return string representation of the user."""
         return self.first_name + " " + self.last_name
 
 
@@ -24,12 +25,12 @@ class User(models.Model):
 class Instructor(User):
     """Represents an instructor who is a type of user with additional teaching
     information."""
-
+    
     full_time = models.BooleanField(default=True)
     total_learners = models.IntegerField()
 
-    # Create a toString method for object string representation
     def __str__(self):
+        """Return string representation of the instructor."""
         return (
             "First name: "
             + self.first_name
@@ -43,9 +44,6 @@ class Instructor(User):
             + "Total Learners: "
             + str(self.total_learners)
         )
-
-    # Learner modelclass Learner(User):
-
 
 class Learner(User):
     """Represents a learner who is a type of user with additional learning
@@ -71,8 +69,8 @@ class Learner(User):
     )
     social_link = models.URLField(max_length=200)
 
-    # Create a toString method for object string representation
     def __str__(self):
+        """Return string representation of the learner."""
         return (
             "First name: "
             + self.first_name
@@ -99,8 +97,8 @@ class Course(models.Model):
     # Many-To-Many relationship with Learner via Enrollment relationship
     learners = models.ManyToManyField(Learner, through="Enrollment")
 
-    # Create a toString method for object string representation
     def __str__(self):
+        """Return string representation of the course."""
         return "Name: " + self.name + "," + "Description: " + self.description
 
 
@@ -142,8 +140,13 @@ class Enrollment(models.Model):
         ("dropped", "Dropped"),
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")
-
-    progress = models.DecimalField(max_digits=5, decimal_places=2, default=0.0, help_text="Percent complete (0-100)")
+    
+    progress = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0.0,
+        help_text="Percent complete (0-100)"
+    )
     last_accessed = models.DateTimeField(blank=True, null=True)
     certificate_issued = models.BooleanField(default=False)
     feedback = models.TextField(blank=True, null=True)
@@ -152,7 +155,7 @@ class Enrollment(models.Model):
 # Lesson
 class Lesson(models.Model):
     """Represents a lesson that belongs to a course."""
-
+    
     title = models.CharField(max_length=200, default="title")
     course = models.ForeignKey(Course, null=True, on_delete=models.CASCADE)
     content = models.TextField()

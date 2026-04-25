@@ -1,6 +1,12 @@
-from .models import Instructor, Learner, Enrollment, Course
+
+"""Forms for CRUD app models."""
+
+from django import forms
+from crud.models import Instructor, Learner, Enrollment
+
 
 class EnrollmentForm(forms.ModelForm):
+    """Form for Enrollment model."""
     class Meta:
         model = Enrollment
         fields = [
@@ -14,14 +20,15 @@ class EnrollmentForm(forms.ModelForm):
         }
 
     def clean_progress(self):
+        """Validate that progress is between 0 and 100."""
         progress = self.cleaned_data.get('progress')
         if progress is not None and (progress < 0 or progress > 100):
             raise forms.ValidationError('Progress must be between 0 and 100.')
         return progress
-from django import forms
-from .models import Instructor, Learner
+
 
 class InstructorForm(forms.ModelForm):
+    """Form for Instructor model."""
     class Meta:
         model = Instructor
         fields = [
@@ -33,12 +40,15 @@ class InstructorForm(forms.ModelForm):
         }
 
     def clean_total_learners(self):
+        """Validate that total_learners is non-negative."""
         total_learners = self.cleaned_data.get('total_learners')
         if total_learners is not None and total_learners < 0:
             raise forms.ValidationError('Total learners must be non-negative.')
         return total_learners
 
+
 class LearnerForm(forms.ModelForm):
+    """Form for Learner model."""
     class Meta:
         model = Learner
         fields = [
@@ -51,7 +61,10 @@ class LearnerForm(forms.ModelForm):
         }
 
     def clean_social_link(self):
+        """Validate that social_link starts with http:// or https://."""
         link = self.cleaned_data.get('social_link')
         if link and not link.startswith(('http://', 'https://')):
-            raise forms.ValidationError('Social link must start with http:// or https://')
+            raise forms.ValidationError(
+                'Social link must start with http:// or https://'
+            )
         return link

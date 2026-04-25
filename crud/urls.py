@@ -1,3 +1,6 @@
+
+"""URL configuration for CRUD app."""
+
 from django.urls import path
 from . import views
 
@@ -9,16 +12,31 @@ urlpatterns = [
     path('courses/<int:pk>/', views.course_detail, name='course_detail'),
     path('instructors/', views.instructor_list, name='instructor_list'),
     path('instructors/create/', views.instructor_create, name='instructor_create'),
-    path('instructors/<int:pk>/edit/', views.instructor_update, name='instructor_update'),
-    path('instructors/<int:pk>/delete/', views.instructor_delete, name='instructor_delete'),
+    path(
+        'instructors/<int:pk>/edit/',
+        views.instructor_update,
+        name='instructor_update',
+    ),
+    path(
+        'instructors/<int:pk>/delete/',
+        views.instructor_delete,
+        name='instructor_delete',
+    ),
     path('instructors/<int:pk>/', views.instructor_detail, name='instructor_detail'),
     path('learners/', views.learner_list, name='learner_list'),
     path('learners/create/', views.learner_create, name='learner_create'),
     path('learners/<int:pk>/edit/', views.learner_update, name='learner_update'),
     path('learners/<int:pk>/delete/', views.learner_delete, name='learner_delete'),
     path('learners/<int:pk>/', views.learner_detail, name='learner_detail'),
-
     # Enrollment management
-    path('courses/<int:course_id>/enroll/', views.enrollment_create, name='enrollment_create'),
-    path('enrollments/<int:pk>/edit/', views.enrollment_update, name='enrollment_update'),
+    path(
+        'courses/<int:course_id>/enroll/',
+        views.enrollment_create,
+        name='enrollment_create',
+    ),
+    path(
+        'enrollments/<int:pk>/edit/',
+        views.enrollment_update,
+        name='enrollment_update',
+    ),
 ]

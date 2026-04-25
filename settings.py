@@ -1,12 +1,11 @@
-
-
-DEBUG = True
 """Django settings for the CRUD application."""
 
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
+
+DEBUG = True
+"""Django settings for the CRUD application."""
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent

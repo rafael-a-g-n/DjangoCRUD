@@ -1,3 +1,5 @@
+"""Project URL configuration for DjangoCRUD."""
+
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect

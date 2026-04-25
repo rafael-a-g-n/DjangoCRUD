@@ -1,22 +1,26 @@
+"""Views for CRUD app models."""
+
 from django.shortcuts import render, get_object_or_404, redirect
-
-from .models import Course, Instructor, Learner
-from .forms import InstructorForm, LearnerForm
 from django import forms
+from crud.models import Course, Instructor, Learner
+from crud.forms import InstructorForm, LearnerForm
 
-# Form for Course
+
 class CourseForm(forms.ModelForm):
+    """Form for Course model."""
     class Meta:
         model = Course
         fields = ['name', 'description']
 
-# List all courses
+
 def course_list(request):
+    """List all courses."""
     courses = Course.objects.all()
     return render(request, 'crud/course_list.html', {'courses': courses})
 
-# Create a new course
+
 def course_create(request):
+    """Create a new course."""
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
@@ -26,8 +30,9 @@ def course_create(request):
         form = CourseForm()
     return render(request, 'crud/course_form.html', {'form': form})
 
-# Update an existing course
+
 def course_update(request, pk):
+    """Update an existing course."""
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
@@ -38,21 +43,24 @@ def course_update(request, pk):
         form = CourseForm(instance=course)
     return render(request, 'crud/course_form.html', {'form': form})
 
-# Delete a course
+
 def course_delete(request, pk):
+    """Delete a course."""
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
         return redirect('course_list')
     return render(request, 'crud/course_confirm_delete.html', {'course': course})
 
-# List all instructors
+
 def instructor_list(request):
+    """List all instructors."""
     instructors = Instructor.objects.all()
     return render(request, 'crud/instructor_list.html', {'instructors': instructors})
 
-# Create a new instructor
+
 def instructor_create(request):
+    """Create a new instructor."""
     if request.method == 'POST':
         form = InstructorForm(request.POST)
         if form.is_valid():
@@ -62,8 +70,9 @@ def instructor_create(request):
         form = InstructorForm()
     return render(request, 'crud/instructor_form.html', {'form': form})
 
-# Update an existing instructor
+
 def instructor_update(request, pk):
+    """Update an existing instructor."""
     instructor = get_object_or_404(Instructor, pk=pk)
     if request.method == 'POST':
         form = InstructorForm(request.POST, instance=instructor)
@@ -74,40 +83,46 @@ def instructor_update(request, pk):
         form = InstructorForm(instance=instructor)
     return render(request, 'crud/instructor_form.html', {'form': form})
 
-# Delete an instructor
+
 def instructor_delete(request, pk):
+    """Delete an instructor."""
     instructor = get_object_or_404(Instructor, pk=pk)
     if request.method == 'POST':
         instructor.delete()
         return redirect('crud:instructor_list')
     return render(request, 'crud/instructor_confirm_delete.html', {'instructor': instructor})
 
-# Instructor detail view
+
 def instructor_detail(request, pk):
+    """Show instructor detail."""
     instructor = get_object_or_404(Instructor, pk=pk)
     return render(request, 'crud/instructor_detail.html', {'instructor': instructor})
 
-# List all learners
 
-# Create a new enrollment (assign learner to course)
 def learner_list(request):
+    """List all learners."""
     learners = Learner.objects.all()
-    return render(request, 'crud/learner_list.html', {'learners': learners})
+    return render(
+        request,
+        'crud/learner_list.html',
+        {'learners': learners}
+    )
 
-# Create a new learner
+
 def learner_create(request):
+    """Create a new learner."""
     if request.method == 'POST':
         form = LearnerForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('crud:learner_list')
     else:
-# Edit an existing enrollment
         form = LearnerForm()
     return render(request, 'crud/learner_form.html', {'form': form})
 
-# Update an existing learner
+
 def learner_update(request, pk):
+    """Update an existing learner."""
     learner = get_object_or_404(Learner, pk=pk)
     if request.method == 'POST':
         form = LearnerForm(request.POST, instance=learner)
@@ -131,10 +146,21 @@ def learner_delete(request, pk):
 def learner_detail(request, pk):
     learner = get_object_or_404(Learner, pk=pk)
     # Get courses the learner is enrolled in
-    enrolled_courses = Course.objects.filter(enrollment__learner=learner).distinct()
-    return render(request, 'crud/learner_detail.html', {'learner': learner, 'enrolled_courses': enrolled_courses})
+    enrolled_courses = Course.objects.filter(
+        enrollment__learner=learner
+    ).distinct()
+    return render(
+        request,
+        'crud/learner_detail.html',
+        {
+            'learner': learner,
+            'enrolled_courses': enrolled_courses
+        }
+    )
 
 # Course detail view
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    return render(request, 'crud/course_detail.html', {'course': course})
+    return render(
+        request, 'crud/course_detail.html', {'course': course}
+    )
