@@ -23,6 +23,7 @@ def enrollment_update(request, pk):
 """Views for CRUD app models."""
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 def homepage(request):
     """Homepage view for portfolio project."""
     from datetime import datetime
