@@ -18,15 +18,41 @@
       {% endfor %}
     </ul>
     <h6>Learners Enrolled:</h6>
-    <ul class="list-group mb-3">
-      {% for learner in course.learners.all %}
-        <li class="list-group-item">
-          <a href="{% url 'crud:learner_update' learner.id %}" class="text-decoration-none">{{ learner.first_name|escape }} {{ learner.last_name|escape }}</a>
-        </li>
-      {% empty %}
-        <li class="list-group-item text-muted">No learners enrolled.</li>
-      {% endfor %}
-    </ul>
+    <table class="table table-bordered table-striped mb-3">
+      <thead>
+        <tr>
+          <th>Learner</th>
+          <th>Mode</th>
+          <th>Status</th>
+          <th>Grade</th>
+          <th>Progress</th>
+          <th>Certificate</th>
+          <th>Last Accessed</th>
+          <th>Feedback</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for enrollment in course.enrollment_set.all %}
+        <tr>
+          <td><a href="{% url 'crud:learner_update' enrollment.learner.id %}" class="text-decoration-none">{{ enrollment.learner.first_name|escape }} {{ enrollment.learner.last_name|escape }}</a></td>
+          <td>{{ enrollment.get_mode_display|default:"-"|escape }}</td>
+          <td>{{ enrollment.get_status_display|default:"-"|escape }}</td>
+          <td>{{ enrollment.get_grade_display|default:"-"|escape }}</td>
+          <td>{{ enrollment.progress|default:"-" }}%</td>
+          <td>{% if enrollment.certificate_issued %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+          <td>{{ enrollment.last_accessed|date:"Y-m-d H:i"|default:"-" }}</td>
+          <td>{{ enrollment.feedback|default:"-"|linebreaksbr|escape }}</td>
+          <td>
+            <a href="{% url 'crud:enrollment_update' enrollment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9" class="text-muted">No learners enrolled.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'crud:enrollment_create' course.id %}" class="btn btn-success mb-3">Add Enrollment</a>
     <a href="{% url 'crud:course_update' course.id %}" class="btn btn-outline-primary">Edit</a>
     <a href="{% url 'crud:course_delete' course.id %}" class="btn btn-outline-danger">Delete</a>
     <a href="{% url 'crud:course_list' %}" class="btn btn-secondary">Back to List</a>

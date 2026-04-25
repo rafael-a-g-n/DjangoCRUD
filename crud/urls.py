@@ -17,4 +17,8 @@ urlpatterns = [
     path('learners/<int:pk>/edit/', views.learner_update, name='learner_update'),
     path('learners/<int:pk>/delete/', views.learner_delete, name='learner_delete'),
     path('learners/<int:pk>/', views.learner_detail, name='learner_detail'),
+
+    # Enrollment management
+    path('courses/<int:course_id>/enroll/', views.enrollment_create, name='enrollment_create'),
+    path('enrollments/<int:pk>/edit/', views.enrollment_update, name='enrollment_update'),
 ]
