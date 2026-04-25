@@ -115,6 +115,7 @@ class Enrollment(models.Model):
         (AUDIT, "Audit"),
         (HONOR, "Honor"),
     ]
+
     # Add a learner foreign key
     learner = models.ForeignKey(Learner, on_delete=models.CASCADE)
     # Add a course foreign key
@@ -123,6 +124,29 @@ class Enrollment(models.Model):
     date_enrolled = models.DateField(default=now)
     # Enrollment mode
     mode = models.CharField(max_length=5, choices=COURSE_MODES, default=AUDIT)
+
+    # Additional fields
+    GRADE_CHOICES = [
+        ("A", "A"),
+        ("B", "B"),
+        ("C", "C"),
+        ("D", "D"),
+        ("F", "F"),
+        ("I", "Incomplete"),
+    ]
+    grade = models.CharField(max_length=2, choices=GRADE_CHOICES, blank=True, null=True)
+
+    STATUS_CHOICES = [
+        ("active", "Active"),
+        ("completed", "Completed"),
+        ("dropped", "Dropped"),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")
+
+    progress = models.DecimalField(max_digits=5, decimal_places=2, default=0.0, help_text="Percent complete (0-100)")
+    last_accessed = models.DateTimeField(blank=True, null=True)
+    certificate_issued = models.BooleanField(default=False)
+    feedback = models.TextField(blank=True, null=True)
 
 
 # Lesson
