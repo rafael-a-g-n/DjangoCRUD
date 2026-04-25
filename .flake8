@@ -1,3 +1,8 @@
 [flake8]
+exclude = 
+    .venv/,
+    venv/,
+    .git/,
+    __pycache__/,
+    crud/migrations/
 max-line-length = 88
-extend-ignore = E203, W503

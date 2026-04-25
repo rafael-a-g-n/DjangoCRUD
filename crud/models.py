@@ -1,4 +1,3 @@
-
 """Django models for the CRUD application."""
 
 from django.db import models
@@ -25,7 +24,7 @@ class User(models.Model):
 class Instructor(User):
     """Represents an instructor who is a type of user with additional teaching
     information."""
-    
+
     full_time = models.BooleanField(default=True)
     total_learners = models.IntegerField()
 
@@ -44,6 +43,7 @@ class Instructor(User):
             + "Total Learners: "
             + str(self.total_learners)
         )
+
 
 class Learner(User):
     """Represents a learner who is a type of user with additional learning
@@ -103,9 +103,8 @@ class Course(models.Model):
 
 
 # Enrollment model as a lookup table with additional enrollment info
-
 class Enrollment(models.Model):
-    """Represents the enrollment of a learner in a course with additional information."""
+    """Represents a learner's enrollment in a course with extra details."""
 
     class Meta:
         unique_together = ('learner', 'course')
@@ -143,7 +142,7 @@ class Enrollment(models.Model):
         ("dropped", "Dropped"),
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="active")
-    
+
     progress = models.DecimalField(
         max_digits=5,
         decimal_places=2,
@@ -158,7 +157,7 @@ class Enrollment(models.Model):
 # Lesson
 class Lesson(models.Model):
     """Represents a lesson that belongs to a course."""
-    
+
     title = models.CharField(max_length=200, default="title")
     course = models.ForeignKey(Course, null=True, on_delete=models.CASCADE)
     content = models.TextField()

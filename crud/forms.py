@@ -1,8 +1,9 @@
-
 """Forms for CRUD app models."""
 
 from django import forms
-from crud.models import Instructor, Learner, Enrollment, Course
+
+from crud.models import Course, Enrollment, Instructor, Learner
+
 
 # Form for Course with instructors field
 class CourseForm(forms.ModelForm):

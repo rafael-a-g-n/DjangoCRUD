@@ -1,0 +1,11 @@
+[MASTER]
+ignore=migrations
+init-hook='import sys; sys.path.append(".")'
+
+[MESSAGES CONTROL]
+disable=
+    too-few-public-methods,
+    missing-class-docstring
+
+[TYPECHECK]
+generated-members=objects
