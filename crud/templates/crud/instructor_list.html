@@ -9,6 +9,7 @@
             <th>Email</th>
             <th>Full Time</th>
             <th>Total Learners</th>
+            <th>Courses Taught</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -21,8 +22,18 @@
             <td>{{ instructor.full_time|yesno:"Yes,No" }}</td>
             <td>{{ instructor.total_learners|default:0 }}</td>
             <td>
-                <a href="{% url 'crud:instructor_update' instructor.id %}">Edit</a> |
-                <a href="{% url 'crud:instructor_delete' instructor.id %}">Delete</a>
+                <ul class="list-unstyled mb-0">
+                {% for course in instructor.course_set.all %}
+                    <li><span class="badge bg-info text-dark">{{ course.name|escape }}</span></li>
+                {% empty %}
+                    <li><span class="text-muted">None</span></li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a href="{% url 'crud:instructor_update' instructor.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'crud:instructor_delete' instructor.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a href="{% url 'crud:instructor_detail' instructor.id %}" class="btn btn-sm btn-outline-secondary">Detail</a>
             </td>
         </tr>
         {% empty %}
