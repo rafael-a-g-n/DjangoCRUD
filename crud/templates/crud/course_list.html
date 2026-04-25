@@ -19,6 +19,7 @@
             <td>{{ course.name }}</td>
             <td>{{ course.description }}</td>
             <td>
+                <a href="{% url 'crud:course_detail' course.pk %}" class="btn btn-sm btn-info">View</a>
                 <a href="{% url 'crud:course_update' course.pk %}" class="btn btn-sm btn-warning">Edit</a>
                 <a href="{% url 'crud:course_delete' course.pk %}" class="btn btn-sm btn-danger">Delete</a>
             </td>
