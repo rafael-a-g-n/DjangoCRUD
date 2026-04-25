@@ -7,7 +7,7 @@ def enrollment_update(request, pk):
         form = EnrollmentForm(request.POST, instance=enrollment)
         if form.is_valid():
             form.save()
-            return redirect('course_detail', pk=enrollment.course.pk)
+            return redirect('crud:course_detail', pk=enrollment.course.pk)
     else:
         form = EnrollmentForm(instance=enrollment)
     return render(request, 'crud/enrollment_form.html', {'form': form, 'course': enrollment.course})
@@ -27,7 +27,7 @@ def enrollment_create(request, course_id):
             enrollment = form.save(commit=False)
             enrollment.course = course
             enrollment.save()
-            return redirect('course_detail', pk=course_id)
+            return redirect('crud:course_detail', pk=course_id)
     else:
         form = EnrollmentForm(initial={'course': course})
     return render(request, 'crud/enrollment_form.html', {'form': form, 'course': course})
@@ -71,7 +71,7 @@ def course_delete(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
-        return redirect('course_list')
+        return redirect('crud:course_list')
     return render(request, 'crud/course_confirm_delete.html', {'course': course})
 
 
