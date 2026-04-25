@@ -3,7 +3,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django import forms
 from crud.models import Course, Instructor, Learner
-from crud.forms import InstructorForm, LearnerForm
+from crud.forms import InstructorForm, LearnerForm, EnrollmentForm
+# Enrollment create view
+def enrollment_create(request, course_id):
+    """Create a new enrollment for a learner in a course."""
+    course = get_object_or_404(Course, pk=course_id)
+    if request.method == 'POST':
+        form = EnrollmentForm(request.POST)
+        if form.is_valid():
+            enrollment = form.save(commit=False)
+            enrollment.course = course
+            enrollment.save()
+            return redirect('course_detail', pk=course_id)
+    else:
+        form = EnrollmentForm(initial={'course': course})
+    return render(request, 'crud/enrollment_form.html', {'form': form, 'course': course})
 
 
 class CourseForm(forms.ModelForm):
